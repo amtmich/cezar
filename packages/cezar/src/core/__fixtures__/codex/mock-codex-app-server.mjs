@@ -59,7 +59,7 @@ rl.on('line', (line) => {
     emit({ method: 'turn/started', params: { turn: { id: 'turn_mock_1', status: 'inProgress', items: [] } } });
     const turnText = msg.params?.input?.map?.((part) => part.text ?? '').join('\n') ?? '';
     if (turnText.includes('mock:turn-failed')) {
-      emit({ method: 'turn/failed', params: {
+      emit({ method: turnText.includes('mock:turn-completed-failed') ? 'turn/completed' : 'turn/failed', params: {
         turn: { id: 'turn_mock_1', status: 'failed' },
         error: { message: 'model unavailable' },
       } });

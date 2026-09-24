@@ -29,6 +29,7 @@ import {
 } from './codex-app-server-transport.ts';
 import {
   codexSessionStarted,
+  codexTurnFailed,
   createCodexUiState,
   mapCodexNotification,
   type CodexUiMapping,
@@ -498,7 +499,7 @@ class CodexSession implements AgentSession {
         // An interrupted/failed item never sees item/completed — surface its
         // partial prose before the turn boundary (run.ts reads markers there).
         this.textCoalescer.flush();
-        if (method === 'turn/failed' && !this.terminatedByCezar) {
+        if ((method === 'turn/failed' || codexTurnFailed(params)) && !this.terminatedByCezar) {
           const error = params.error as Record<string, unknown> | undefined;
           const message = stringField(error ?? {}, 'message') ?? 'codex turn failed';
           this.emit({ type: 'error', message });
